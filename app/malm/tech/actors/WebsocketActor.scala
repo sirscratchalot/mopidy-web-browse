@@ -2,24 +2,43 @@ package malm.tech.actors
 
 import javax.jmdns.ServiceInfo
 
-import akka.NotUsed
 import akka.actor._
-import akka.stream.scaladsl.Flow
-import play.api.libs.json.JsValue
-import Messages._
-class WebsocketActor(flow:Flow[JsValue,JsValue,NotUsed]) extends Actor {
+import malm.tech.actors.Messages._
+import malm.tech.helpers.JsonWriters._
+import play.api.libs.json.Json
 
+class WebsocketActor(out:ActorRef,in:ActorRef) extends Actor {
+  in ! AddListeningActor(context.self)
+  in ! ListServices //Get all cached services
+  var sentKeys = List[String]()
   override def receive = {
-    case  NewService(name:String, serviceType:String, info:ServiceInfo) =>
-      print("WHATEVER MAN! %s",{info})
-      print("Case by case!: 1")
-    case RemovedService(name,serviceType,info) =>
-      print("THIS ONE IS GONE! %s",{info})
-      print("Case by case!: 2")
-    case ResolvedService(name,serviceType,info) =>
-      print("Finally fouhnd! %s",{info})
-      print("Case by case!: 3")
+    case BulkServices(infos:Set[ServiceInfo]) =>
+      println("Bulk")
+      infos.foreach(i =>  receive(
+        ResolvedService(i.getName,i.getType,i))
+      )
+    case BulkWebUi(links:Map[String,MopidyWebUIScannerActor.ScanResult]) =>
+      links.foreach(e => e._2.foreach(ln => receive(ResolvedWebUi(e._1,ln.name,ln.url)))
+      )
+    case x: ResolvedWebUi =>
+      println(s"Resolved $x")
+      out ! Json.toJson(x)
+    case  x:NewService =>
+      out ! Json.toJson(x)
 
+    case x:RemovedService =>
+      out ! Json.toJson(x)
 
+    case x:ResolvedService =>
+      if(!sentKeys.contains(x.info.getKey)){
+        out ! Json.toJson(x)
+      }
+      sentKeys=sentKeys :+ x.info.getKey
+
+    case x:Any => println(s"Unknown command..: $x")
+  }
+
+  override def postStop() = {
+    in ! RemoveListeningActor(context.self)
   }
 }

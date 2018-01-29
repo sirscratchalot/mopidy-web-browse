@@ -2,45 +2,50 @@ package malm.tech.actors
 import akka.actor._
 import javax.jmdns.{JmDNS, ServiceEvent, ServiceListener, ServiceTypeListener}
 
-import malm.tech.actors.JmDNSActor.AddChild
 
-import scala.concurrent.ExecutionContext
+
+/**
+  * JmDNSActor should be a single actor for server.
+  * reportActor will have the unenviable task of keeping a tally of services.
+  */
 object JmDNSActor {
-  case class AddChild(name:String)
-  def apply(reportActor: ActorRef,services:Array[String])(implicit  ec:ExecutionContext): JmDNSActor ={
+  def apply(reportActor: ActorRef,services:Array[String]): JmDNSActor ={
     val jmDNS = JmDNS.create("0.0.0.0")
-    return new JmDNSActor(reportActor,jmDNS,services)
+    new JmDNSActor(reportActor,jmDNS,services)
   }
 
 
 }
-/**
-  * Polling or flow JmDNS implementation?
-  */
-class JmDNSActor private (reportActor:ActorRef,jmDNS: JmDNS,services:Array[String]) extends Actor {
+class JmDNSActor  (reportActor:ActorRef,jmDNS: JmDNS,services:Array[String]) extends Actor {
   import Messages._
    jmDNS.addServiceTypeListener(
     new ServiceTypeListener {
       override def subTypeForServiceTypeAdded(event: ServiceEvent): Unit = {
-        print("New subtype added " +event.getName+" "+event.getType())
+        reportActor ! NewServiceSubType(event.getType,event.getInfo.getSubtype)
       }
       override def serviceTypeAdded(event: ServiceEvent): Unit = {
-        print("New type added " +event.getName+" "+event.getType())
+        reportActor ! NewServiceType(event.getType)
       }
     }
   )
-  services.toStream.foreach(service => jmDNS.addServiceListener(service,new ServiceListener {
+  services.toStream.foreach(service => jmDNS.addServiceListener(service,
+    new ServiceListener {
     override def serviceAdded(event: ServiceEvent): Unit = {
-     reportActor ! newService(event.getName,event.getType,event.getInfo)
+     reportActor ! NewService(event.getName,event.getType,event.getInfo)
     }
 
     override def serviceResolved(event: ServiceEvent): Unit = {
-      reportActor ! newService(event.getName,event.getType,event.getInfo)
+      reportActor ! ResolvedService(event.getName,event.getType,event.getInfo)
     }
 
-    override def serviceRemoved(event: ServiceEvent): Unit = ???
+    override def serviceRemoved(event: ServiceEvent): Unit = {
+      reportActor ! RemovedService(event.getName,event.getType,event.getInfo)
+    }
+  }))
+  override def receive = {
+    case x:Any=> println(s"Not much of a talker, got: $x")
   }
-  override def receive = { case AddChild(name:String)=>
-   sender() ! "WHOOO ARE YOU!?! WHOOO... oh.. I guess you're " + name
+  override def postStop() = {
+    jmDNS.close()
   }
 }

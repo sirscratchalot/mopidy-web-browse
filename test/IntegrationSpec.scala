@@ -3,8 +3,7 @@ import play.api.test._
 import play.api.test.Helpers._
 
 /**
- * add your integration spec here.
- * An integration test will fire up a whole play application in a real (or headless) browser
+  * Leave in place for now..
  */
 class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerTest with HtmlUnitFactory {
 
@@ -14,7 +13,7 @@ class IntegrationSpec extends PlaySpec with OneServerPerTest with OneBrowserPerT
 
       go to ("http://localhost:" + port)
 
-      pageSource must include ("Your new application is ready.")
+      pageSource must include ("")
     }
   }
 }
