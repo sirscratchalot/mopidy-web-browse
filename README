@@ -1,49 +1,40 @@
-This is your new Play application
-=================================
+# Mopidy Server Browser
 
-This file will be packaged with your application when using `activator dist`.
+Do you have a lot of Raspberry Pis with Mopidy on them? I do.   
+Keeeping track of URLs for multiple playback locations can be a bit annoying.
+Mopidy server browser discovers Mopidy-servers with a HTTP GUI on your network and allows you to 
+use the web interfaces without leaving the page.
+ 
 
-There are several demonstration files available in this template.
+Mopidy Server Browser detects any Mopidy HTTP server and scans it for set up Web GUIs.
+You can then browse the Web-Guis on the page.  
+Running this on my network means no longer having to keep track of URLs, and more importantly neither does anyone else.
 
-Controllers
-===========
+<DEMO GIF HERE>
 
-- HomeController.scala:
+## Running Mopidy-web-browse:
 
-  Shows how to handle simple HTTP requests.
+Needs JRE 1.8 minimum.
+Download mopidy-web-browse.1.0.zip from releases.
+  ```
+  unzip mopidy-web-browse-1.0.zip
+  mopidy-web-browse-1.0-SNAPSHOT/bin/mopidy-web-browse -Dplay.crypto.secret=anythingReally-sinceNotSensitive -Dhttp.port=8080
+ ```
+ This will start the server on port 8080.
+ Go to 'http://localhost:9090' to browse your mopidy servers. 
 
-- AsyncController.scala:
+ On windows, unzip and then start from CMD:  
+  'mopidy-web-browse-1.0-SNAPSHOT/bin/mopidy-web-browse.bat -Dplay.crypto.secret=anythingReally-sinceNotSensitive -Dhttp.port=8080'
 
-  Shows how to do asynchronous programming when handling a request.
+If for any reason the app fails to start, you may need to remove the current PID file before trying again:  
+`rm mopidy-web-browse/RUNNING_PID`
 
-- CountController.scala:
+## Tech stack:
 
-  Shows how to inject a component into a controller and use the component when
-  handling requests.
+- ZeroConf / Bonjour is used to detect services via the JmDNS library [Link](https://github.com/jmdns/jmdns)
+- The server part of Mopidy Web Browse is implemented in [Play Framework](https://www.playframework.com) 2.5 using [Scala](https://scala-lang.org).
+- Detected services are streamed to the front-end via WebSockets implemented via [akka](https://akka.io/) flows and actors . 
+- The frontend is implemented as a [ReactJS](https://reactjs.org) single page app, a minified version is included with the server.
+- The source for the front-end is available in a separate repository: <GUI REPO LINK>
 
-Components
-==========
 
-- Module.scala:
-
-  Shows how to use Guice to bind all the components needed by your application.
-
-- Counter.scala:
-
-  An example of a component that contains state, in this case a simple counter.
-
-- ApplicationTimer.scala:
-
-  An example of a component that starts when the application starts and stops
-  when the application stops.
-
-Filters
-=======
-
-- Filters.scala:
-
-  Creates the list of HTTP filters used by your application.
-
-- ExampleFilter.scala
-
-  A simple filter that adds a header to every response.

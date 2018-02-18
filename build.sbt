@@ -1,4 +1,4 @@
-name := """local-discover"""
+name := """Mopidy-web-browse"""
 
 version := "1.0-SNAPSHOT"
 
