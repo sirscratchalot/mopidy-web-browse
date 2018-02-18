@@ -18,8 +18,10 @@ object Messages {
   //Messages for ReportActor
   case class BulkServices(bulkServices: Set[ServiceInfo])
   case class BulkWebUi(bulkUi: Map[String,List[MopidyWebUIScannerActor.ScanResult]])
+
   case class ListServices()
   case class ListWebUis()
+
   case class AddListeningActor(actorRef: ActorRef)
   case class ConfirmRemoved(actorRef: ActorRef,numberOfListeners:Int)
   case class ConfirmAdded(actorRef: ActorRef,numberOfListeners:Int)
