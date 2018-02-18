@@ -21,7 +21,7 @@ Download mopidy-web-browse.1.0.zip from releases.
   mopidy-web-browse-1.0-SNAPSHOT/bin/mopidy-web-browse -Dplay.crypto.secret=anythingReally-sinceNotSensitive -Dhttp.port=8080
  ```
  This will start the server on port 8080.
- Go to 'http://localhost:9090' to browse your mopidy servers. 
+ Go to 'http://localhost:8080' to browse your mopidy servers. 
 
  On windows, unzip and then start from CMD:  
   'mopidy-web-browse-1.0-SNAPSHOT/bin/mopidy-web-browse.bat -Dplay.crypto.secret=anythingReally-sinceNotSensitive -Dhttp.port=8080'
