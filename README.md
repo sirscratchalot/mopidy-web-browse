@@ -35,6 +35,6 @@ If for any reason the app fails to start, you may need to remove the current PID
 - The server part of Mopidy Web Browse is implemented in [Play Framework](https://www.playframework.com) 2.5 using [Scala](https://scala-lang.org).
 - Detected services are streamed to the front-end via WebSockets implemented via [akka](https://akka.io/) flows and actors . 
 - The frontend is implemented as a [ReactJS](https://reactjs.org) single page app, a minified version is included with the server.
-- The source for the front-end is available in a separate repository: <GUI REPO LINK>
+- The source for the front-end is available in a separate repository: [Mopidy-Web-Browse-Frontend](https://github.com/sirscratchalot/mopidy-web-browse-frontend)
 
 
