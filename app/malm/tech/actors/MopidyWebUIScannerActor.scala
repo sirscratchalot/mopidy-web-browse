@@ -18,16 +18,18 @@ object MopidyWebUIScannerActor {
   }
 }
 class MopidyWebUIScannerActor(ws:WSClient)(implicit executionContext: ExecutionContext) extends Actor{
-
+  val ipv4 = "[0-9\\.]"
   override def receive:Receive={
     case ScanWebUI(info:ServiceInfo) =>
       println("Scan it magistern scan it: "+info)
       var urls = info.getURLs()
       val replyTo = sender()
+      println(urls(0))
       ws.url(urls(0)).get() onComplete {
         case Success(response:WSResponse) =>
 
-          val reply = ScanWebUIResult(info, WebScraper.removeDtdAndGetUIs(response.body))
+          val reply = ScanWebUIResult(info,
+            WebScraper.removeDtdAndGetUIs(response.body))
           replyTo ! reply
         case Failure(t) => println("Failed scrape"+t)
       }

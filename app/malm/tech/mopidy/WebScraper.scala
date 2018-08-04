@@ -1,9 +1,6 @@
 package malm.tech.mopidy
 
 import malm.tech.actors.MopidyWebUIScannerActor.ScanResult
-import play.api.libs.ws.WSResponse
-
-import scala.xml.NodeSeq
 
 object WebScraper {
   def removeDtdAndGetUIs(body:String): List[ScanResult] ={
