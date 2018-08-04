@@ -21,7 +21,7 @@ Download mopidy-web-browse.1.0.zip from releases.
   mopidy-web-browse-1.0-SNAPSHOT/bin/mopidy-web-browse -Dplay.crypto.secret=anythingReally-sinceNotSensitive -Dhttp.port=8080
  ```
  This will start the server on port 8080.
- Go to 'http://localhost:9090' to browse your mopidy servers. 
+ Go to 'http://localhost:8080' to browse your mopidy servers. 
 
  On windows, unzip and then start from CMD:  
   'mopidy-web-browse-1.0-SNAPSHOT/bin/mopidy-web-browse.bat -Dplay.crypto.secret=anythingReally-sinceNotSensitive -Dhttp.port=8080'
@@ -35,6 +35,6 @@ If for any reason the app fails to start, you may need to remove the current PID
 - The server part of Mopidy Web Browse is implemented in [Play Framework](https://www.playframework.com) 2.5 using [Scala](https://scala-lang.org).
 - Detected services are streamed to the front-end via WebSockets implemented via [akka](https://akka.io/) flows and actors . 
 - The frontend is implemented as a [ReactJS](https://reactjs.org) single page app, a minified version is included with the server.
-- The source for the front-end is available in a separate repository: <GUI REPO LINK>
+- The source for the front-end is available in a separate repository: [Mopidy-Web-Browse-Frontend](https://github.com/sirscratchalot/mopidy-web-browse-frontend)
 
 
