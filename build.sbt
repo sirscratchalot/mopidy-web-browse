@@ -17,4 +17,4 @@ libraryDependencies ++= Seq(
         "org.mockito" % "mockito-core" %"2.13.0" %Test,
         )
 libraryDependencies += "io.backchat.hookup" %% "hookup" % "0.4.2" %Test
-
+ensimeScalaVersion in ThisBuild := "2.11.4"
